@@ -1,0 +1,10 @@
+H1:
+1. Setja upp DB
+  * lesa CSV
+
+2. Skrifa (nokkur?) public routes
+
+3. Authentication
+  * JWT - JSON web tokens (ágætis sýnidæmi um þetta, fyrirlestur 6)
+
+4-6. Klára route-in, bæta við pagination(sjá 10 eða 15 lausnir etc.), leit (nota postgres í leitina)
