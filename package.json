@@ -1,0 +1,31 @@
+{
+  "name": "vef2-2018-h1",
+  "version": "1.0.0",
+  "description": "Vefforritun 2 hópverkefni 1",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "start": "node app.js",
+    "eslint": "eslint *.js **/*.js"
+  },
+  "dependencies": {
+    "dotenv": "^5.0.0",
+    "express": "^4.16.2",
+    "pg": "^7.4.1",
+    "validator": "^9.4.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.17.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/goh12/vef2-2018-h1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/goh12/vef2-2018-h1/issues"
+  },
+  "homepage": "https://github.com/goh12/vef2-2018-h1#readme"
+}
