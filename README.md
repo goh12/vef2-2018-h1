@@ -16,4 +16,4 @@ Gunnar Thor Örnólfsson - gto3@hi.is
 
 Guðmundur Óskar Halldórsson - goh12@hi.is
 
-Frosti Grétarsson - frg17@hi.isþþþ
+Frosti Grétarsson - frg17@hi.is
