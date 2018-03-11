@@ -8,7 +8,7 @@ const users = require('./users');
 
 const {
   JWT_SECRET: jwtSecret,
-  TOKEN_LIFETIME: tokenLifetime = 20,
+  TOKEN_LIFETIME: tokenLifetime = 7200,
 } = process.env;
 
 if (!jwtSecret) {
@@ -139,5 +139,8 @@ router.post(
 
 router.post('/login', catchErrors(loginRoute));
 router.get('/books', catchErrors(categoriesRoute)); // þetta er bara test route
+router.get('/admin', requireAuthentication, (req, res) => { // líka test route fyrir requireAuthentication
+  res.json({ data: 'top secret' });
+});
 
 module.exports = router;
