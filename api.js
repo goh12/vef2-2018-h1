@@ -75,7 +75,7 @@ function requireAuthentication(req, res, next) {
 
       req.user = user;
       next();
-    }
+    },
   )(req, res, next);
 }
 
@@ -117,13 +117,24 @@ async function register(req, res) {
   // next();
 }
 
+async function usersRoute(req, res) {
+  const result = await users.getUsers();
+
+  return res.status(200).json({ result });
+}
+
+async function userRoute(req, res) {
+  const { id } = req.params;
+  const result = await users.findById(id);
+
+  if (!result) {
+    return res.status(404).json({ error: 'No user found by that id' });
+  }
+  return res.status(200).json({ result });
+}
 
 function catchErrors(fn) {
   return (req, res, next) => fn(req, res, next).catch(next);
-}
-
-async function categoriesRoute(req, res) {
-  return res.status(404).json({ error: 'Note not found' });
 }
 
 router.post(
@@ -138,9 +149,7 @@ router.post(
 );
 
 router.post('/login', catchErrors(loginRoute));
-router.get('/books', catchErrors(categoriesRoute)); // þetta er bara test route
-router.get('/admin', requireAuthentication, (req, res) => { // líka test route fyrir requireAuthentication
-  res.json({ data: 'top secret' });
-});
+router.get('/users', requireAuthentication, catchErrors(usersRoute));
+router.get('/users/:id', requireAuthentication, catchErrors(userRoute));
 
 module.exports = router;

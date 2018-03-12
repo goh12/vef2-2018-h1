@@ -44,6 +44,7 @@ async function findById(id) {
   const result = await query(q, [id]);
 
   if (result.rowCount === 1) {
+    delete result.rows[0].password;
     return result.rows[0];
   }
 
@@ -57,17 +58,24 @@ async function createUser(username, password, name) {
 
   const result = await query(q, [username, hashedPassword, name]);
 
-  return {
-    id: result.rows[0].id,
-    username: result.rows[0].username,
-    name: result.rows[0].name,
-    imgurl: result.rows[0].imgurl,
-  };
+  delete result.rows[0].password;
+  return result.rows[0];
 }
+
+async function getUsers() {
+  const q = 'SELECT * FROM users ORDER BY id ASC LIMIT 10 OFFSET 0';
+
+  const result = await query(q, []);
+
+  result.rows.map(x => delete x.password);
+  return result.rows;
+}
+
 
 module.exports = {
   comparePasswords,
   findByUsername,
   findById,
   createUser,
+  getUsers,
 };
