@@ -35,13 +35,10 @@ async function run() {
     console.log('Begins..');
     await seedDB();
     console.log('End.');
-    return true;
   } catch (err) {
     console.log(err);
-    return false;
   }
+  process.exit();
 }
 
 run();
-
-process.exit();
