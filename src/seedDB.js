@@ -19,8 +19,9 @@ async function seedDB() {
           await client.query('INSERT INTO categories (name) VALUES ($1)', [data.category]);
         }
         await client.query(
-          q, 
-          [data.title, data.isbn13, data.author, data.description, data.category]);
+          q,
+          [data.title, data.isbn13, data.author, data.description, data.category],
+        );
       } catch (err) {
         console.log(err);
       }
@@ -42,3 +43,5 @@ async function run() {
 }
 
 run();
+
+process.exit();
