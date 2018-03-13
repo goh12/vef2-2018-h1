@@ -67,6 +67,39 @@ GET /books/:id
   }
 ```
 
+```
+  POST /register
+  request_body:
+  {
+	"username": "kalli",
+	"password": "123123",
+	"name": "kalli Hressi"
+  }
+```
+
+```
+  POST /login
+  request_body:
+  {
+  	"username": "kalli",
+  	"password": "123123"
+  }
+```
+
+```
+  GET /users
+  HEADER:
+    Content-Type: application/json
+    Authorization: bearer {user's token}
+```
+
+```
+  GET /users/me
+  HEADER:
+    Content-Type: application/json
+    Authorization: bearer {user's token}
+```
+
 ---
 ## Höfundar
 Gunnar Thor Örnólfsson - gto3@hi.is
