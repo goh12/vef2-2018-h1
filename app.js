@@ -1,11 +1,15 @@
 require('dotenv').config();
 const express = require('express');
 const api = require('./usersapi');
+const categoriesAPI = require('./src/categoriesapi');
+const booksAPI = require('./src/booksapi.js');
 
 const app = express();
 
 app.use(express.json());
 app.use('/', api);
+app.use('/categories', categoriesAPI);
+app.use('/books', booksAPI);
 
 function notFoundHandler(req, res, next) { // eslint-disable-line
   res.status(404).json({ error: 'Not found' });
