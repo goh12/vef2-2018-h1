@@ -118,7 +118,10 @@ async function register(req, res) {
 }
 
 async function usersRoute(req, res) {
-  const result = await users.getUsers();
+  const limit = req.get('paginglimit') || 10;
+  const offset = req.get('pagingoffset') || 0;
+
+  const result = await users.getUsers(limit, offset);
 
   return res.status(200).json({ result });
 }
@@ -146,21 +149,49 @@ async function userMePatchRoute(req, res) {
   return res.status(200).json({ result });
 }
 
+async function userNewRead(req, res) {
+  const { user } = req;
+  const { bookId, userRating, userReview } = req.body;
+  const result = await users.addUserRead(user.id, bookId, userRating, userReview);
+
+  return res.status(200).json({ result });
+}
+
+async function userGetRead(req, res) {
+  const { user } = req;
+  const limit = req.get('paginglimit') || 10;
+  const offset = req.get('pagingoffset') || 0;
+
+  const result = await users.getUserRead(user.id, limit, offset);
+
+  return res.status(200).json({ result });
+}
+
+async function userIdGetRead(req, res) {
+  const { id } = req.params;
+  const limit = req.get('paginglimit') || 10;
+  const offset = req.get('pagingoffset') || 0;
+
+  const result = await users.getUserRead(id, limit, offset);
+
+  if (!result) {
+    return res.status(404).json({ error: 'No user found by that id' });
+  }
+  return res.status(200).json({ result });
+}
+
 function catchErrors(fn) {
   return (req, res, next) => fn(req, res, next).catch(next);
 }
 
-router.post(
-  '/register',
-  catchErrors(register),
-  passport.authenticate('local', {
-    failureRedirect: '/register',
-  }),
-);
+router.post('/register', catchErrors(register));
 router.post('/login', catchErrors(loginRoute));
 router.get('/users', requireAuthentication, catchErrors(usersRoute));
 router.get('/users/me', requireAuthentication, catchErrors(userMeRoute));
 router.get('/users/:id', requireAuthentication, catchErrors(userRoute));
+router.get('/users/:id/read', requireAuthentication, catchErrors(userIdGetRead));
 router.patch('/users/me', requireAuthentication, catchErrors(userMePatchRoute));
+router.post('/users/me/read', requireAuthentication, catchErrors(userNewRead));
+router.get('/users/me/read', requireAuthentication, catchErrors(userGetRead));
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const { Client } = require('pg');
 
-const connectionString = process.env.DATABASE_URL;
+const connectionString = process.env.DATABASE_H1;
 
 async function query(q, values = []) {
   const client = new Client({ connectionString });
@@ -62,21 +62,45 @@ async function createUser(username, password, name) {
   return result.rows[0];
 }
 
-async function getUsers() {
-  const q = 'SELECT * FROM users ORDER BY id ASC LIMIT 10 OFFSET 0';
+async function getUsers(limit, offset) {
+  const q = 'SELECT * FROM users ORDER BY id ASC LIMIT $1 OFFSET $2';
 
-  const result = await query(q, []);
+  const result = await query(q, [limit, offset]);
 
   result.rows.map(x => delete x.password);
   return result.rows;
 }
 
-async function updateUser(name, password, id) {
-  const q = 'UPDATE users SET password = $2, name = $1 WHERE id = $3';
+async function updateUser(id, name, password) {
+  const q = 'UPDATE users SET password = $1, name = $2 WHERE id = $3 RETURNING *';
+  const result = await query(q, [password, name, id]);
 
-  const result = await query(q, [name, password, id]);
+  if (result.rowCount === 1) {
+    delete result.rows[0].password;
+    return result.rows[0];
+  }
 
-  console.log(result);
+  return null;
+}
+
+async function addUserRead(userId, bookId, userRating, userReview) {
+  const q = `INSERT INTO readBooks (userId, bookId, userRating, userReview)
+   VALUES ($1, $2, $3, $4) RETURNING *`;
+
+  const result = await query(q, [userId, bookId, userRating, userReview]);
+
+  if (result.rowCount === 1) {
+    return result.rows[0];
+  }
+
+  return null;
+}
+
+async function getUserRead(userId, limit, offset) {
+  const q = 'SELECT * FROM readbooks WHERE userId = $1 ORDER BY id ASC LIMIT $2 OFFSET $3';
+
+  const result = await query(q, [userId, limit, offset]);
+
   return result.rows;
 }
 
@@ -87,4 +111,6 @@ module.exports = {
   createUser,
   getUsers,
   updateUser,
+  addUserRead,
+  getUserRead,
 };

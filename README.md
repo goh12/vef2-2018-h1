@@ -25,7 +25,7 @@ HEADER:
 GET /books?search=butcher
 HEADER:
   paginglimit: 10
-  pagingoffset: 20
+  pagingoffset: 0
 ```
 
 ```
@@ -89,6 +89,9 @@ GET /books/:id
 ```
   GET /users
   HEADER:
+    paginglimit: 10
+    pagingoffset: 0
+  HEADER:
     Content-Type: application/json
     Authorization: bearer {user's token}
 ```
@@ -100,6 +103,47 @@ GET /books/:id
     Authorization: bearer {user's token}
 ```
 
+```
+  PATCH /users/me
+  HEADER:
+    Content-Type: application/json
+    Authorization: bearer {user's token}
+    request_body:
+  {
+  	"name": "Jón Hressi",
+  	"password": "123123"
+  }
+```
+
+```
+  POST /users/me/read
+  HEADER:
+    Content-Type: application/json
+    Authorization: bearer {user's token}
+    {
+    	"bookId": "5",
+    	"userRating": 5,
+    	"userReview": "wow, very good book"
+    }
+```
+
+```
+  GET /users/me/read
+  HEADER:
+    Content-Type: application/json
+    Authorization: bearer {user's token}
+    paginglimit: 10
+    pagingoffset: 0
+```
+
+```
+  GET /users/1/read
+  HEADER:
+    Content-Type: application/json
+    Authorization: bearer {user's token}
+    paginglimit: 10
+    pagingoffset: 0
+```
 ---
 ## Höfundar
 Gunnar Thor Örnólfsson - gto3@hi.is
