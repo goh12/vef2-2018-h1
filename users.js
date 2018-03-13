@@ -71,6 +71,14 @@ async function getUsers() {
   return result.rows;
 }
 
+async function updateUser(name, password, id) {
+  const q = 'UPDATE users SET password = $2, name = $1 WHERE id = $3';
+
+  const result = await query(q, [name, password, id]);
+
+  console.log(result);
+  return result.rows;
+}
 
 module.exports = {
   comparePasswords,
@@ -78,4 +86,5 @@ module.exports = {
   findById,
   createUser,
   getUsers,
+  updateUser,
 };

@@ -8,7 +8,7 @@ const users = require('./users');
 
 const {
   JWT_SECRET: jwtSecret,
-  TOKEN_LIFETIME: tokenLifetime = 7200,
+  TOKEN_LIFETIME: tokenLifetime = 86400,
 } = process.env;
 
 if (!jwtSecret) {
@@ -133,6 +133,19 @@ async function userRoute(req, res) {
   return res.status(200).json({ result });
 }
 
+async function userMeRoute(req, res) {
+  const { user } = req;
+  return res.status(200).json({ user });
+}
+
+async function userMePatchRoute(req, res) {
+  const { user } = req;
+  const { name, password } = req.body;
+  const result = await users.updateUser(user.id, name, password);
+
+  return res.status(200).json({ result });
+}
+
 function catchErrors(fn) {
   return (req, res, next) => fn(req, res, next).catch(next);
 }
@@ -141,12 +154,13 @@ router.post(
   '/register',
   catchErrors(register),
   passport.authenticate('local', {
-    failureRedirect: '/login',
+    failureRedirect: '/register',
   }),
 );
-
 router.post('/login', catchErrors(loginRoute));
 router.get('/users', requireAuthentication, catchErrors(usersRoute));
+router.get('/users/me', requireAuthentication, catchErrors(userMeRoute));
 router.get('/users/:id', requireAuthentication, catchErrors(userRoute));
+router.patch('/users/me', requireAuthentication, catchErrors(userMePatchRoute));
 
 module.exports = router;
