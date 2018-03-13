@@ -1,13 +1,13 @@
 require('dotenv').config();
 const express = require('express');
-const api = require('./usersapi');
+const usersAPI = require('./src/usersapi');
 const categoriesAPI = require('./src/categoriesapi');
 const booksAPI = require('./src/booksapi.js');
 
 const app = express();
 
 app.use(express.json());
-app.use('/', api);
+app.use('/', usersAPI);
 app.use('/categories', categoriesAPI);
 app.use('/books', booksAPI);
 
