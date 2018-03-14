@@ -63,17 +63,18 @@ async function createUser(username, password, name) {
 }
 
 async function getUsers(limit, offset) {
-  const q = 'SELECT * FROM users ORDER BY id ASC LIMIT $1 OFFSET $2';
+  const q = 'SELECT id, username, name, imgurl FROM users ORDER BY id ASC LIMIT $1 OFFSET $2';
 
   const result = await query(q, [limit, offset]);
 
-  result.rows.map(x => delete x.password);
   return result.rows;
 }
 
 async function updateUser(id, name, password) {
+  const hashedPassword = await bcrypt.hash(password, 11);
+
   const q = 'UPDATE users SET password = $1, name = $2 WHERE id = $3 RETURNING *';
-  const result = await query(q, [password, name, id]);
+  const result = await query(q, [hashedPassword, name, id]);
 
   if (result.rowCount === 1) {
     delete result.rows[0].password;
