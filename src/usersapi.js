@@ -33,10 +33,33 @@ async function strat(data, next) {
   }
 }
 
+function authenticate(req, res, next) {
+  return passport.authenticate(
+    'jwt',
+    { session: false },
+    (err, user, info) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (!user) {
+        const error = info.name === 'TokenExpiredError' ? 'expired token' : 'invalid token';
+        req.unauthenticatedError = error;
+        req.authenticated = false;
+        return next();
+      }
+
+      req.user = user;
+      req.authenticated = true;
+      return next();
+    },
+  )(req, res, next);
+}
+
 passport.use(new Strategy(jwtOptions, strat));
 
 router.use(passport.initialize());
-
+router.use(authenticate);
 
 // JWT_SECRET=$dk3Ae9dknv#Gposiuhvkjkljd
 async function loginRoute(req, res) {
@@ -60,23 +83,10 @@ async function loginRoute(req, res) {
 }
 
 function requireAuthentication(req, res, next) {
-  return passport.authenticate(
-    'jwt',
-    { session: false },
-    (err, user, info) => {
-      if (err) {
-        return next(err);
-      }
-
-      if (!user) {
-        const error = info.name === 'TokenExpiredError' ? 'expired token' : 'invalid token';
-        return res.status(401).json({ error });
-      }
-
-      req.user = user;
-      return next();
-    },
-  )(req, res, next);
+  if (!req.authenticated) {
+    return res.status(401).json({ error: req.unauthenticatedError });
+  }
+  return next();
 }
 
 // hér væri hægt að bæta við enn frekari (og betri) staðfestingu á gögnum
