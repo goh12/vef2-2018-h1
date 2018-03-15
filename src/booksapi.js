@@ -18,6 +18,13 @@ function logError(res) {
   return res.status(500).json({ error: 'Internal server error' });
 }
 
+function requireAuthentication(req, res, next) {
+  if (!req.authenticated) {
+    return res.status(401).json({ error: req.unauthenticatedError });
+  }
+  return next();
+}
+
 /**
  *
  * @param {request object} req
@@ -51,7 +58,7 @@ router.get('/', (req, res) => {
   }
 });
 
-router.post('/', (req, res) => {
+router.post('/', requireAuthentication, (req, res) => {
   createBook(req.body)
     .then((results) => {
       if (results.error) return res.status(400).json({ error: req.errors });
@@ -73,7 +80,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.patch('/:id', (req, res) => {
+router.patch('/:id', requireAuthentication, (req, res) => {
   req.body.id = req.params.id;
   updateBook(req.body)
     .then((results) => {
