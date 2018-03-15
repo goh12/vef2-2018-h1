@@ -39,12 +39,11 @@ async function findByUsername(username) {
 }
 
 async function findById(id) {
-  const q = 'SELECT * FROM users WHERE id = $1';
+  const q = 'SELECT id, username, name, imgurl FROM users WHERE id = $1';
 
   const result = await query(q, [id]);
 
   if (result.rowCount === 1) {
-    delete result.rows[0].password;
     return result.rows[0];
   }
 

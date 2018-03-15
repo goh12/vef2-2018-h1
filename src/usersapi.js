@@ -111,10 +111,6 @@ async function register(req, res) {
   const result = await users.createUser(username, password, name);
 
   return res.status(200).json({ result });
-  // ég átti mig ekki alveg á því, er þetta eitthvað sem við þurfum
-  // næsta middleware mun sjá um að skrá notanda inn því hann verður til
-  // og `username` og `password` verða ennþá sett sem rétt í `req`
-  // next();
 }
 
 async function usersRoute(req, res) {
