@@ -273,24 +273,6 @@ async function updateBook(bookInfo) {
   }
 }
 
-
-/*async function runTest() {
-  const res1 = await updateBook({
-    id: 200,
-    author: 'Frosti Grétarsson',
-    title: 'Frostharður 4',
-    description: 'Algjör vitleysa',
-    isbn13: '1231231231231',
-    category: 'Science Fiction',
-  });
-
-  console.log(res1);
-  process.exit();
-}
-
-runTest();
-*/
-
 module.exports = {
   getCategories,
   createCategory,

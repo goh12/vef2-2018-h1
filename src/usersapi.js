@@ -1,10 +1,15 @@
 const express = require('express');
-
-const router = express.Router();
+const multer = require('multer');
+const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const { Strategy, ExtractJwt } = require('passport-jwt');
-const jwt = require('jsonwebtoken');
 const users = require('./users');
+const { uploadImage } = require('./cloudinary_controller');
+
+
+const upload = multer({ dest: 'uploads/' });
+const router = express.Router();
+
 
 const {
   JWT_SECRET: jwtSecret,
@@ -157,8 +162,8 @@ async function userMePatchRoute(req, res) {
 
 async function userNewRead(req, res) {
   const { user } = req;
-  const { bookId, userRating, userReview } = req.body;
-  const result = await users.addUserRead(user.id, bookId, userRating, userReview);
+  const { bookid, userrating, userreview } = req.body;
+  const result = await users.addUserRead(user.id, bookid, userrating, userreview);
 
   return res.status(200).json({ result });
 }
@@ -186,6 +191,15 @@ async function userIdGetRead(req, res) {
   return res.status(200).json({ result });
 }
 
+async function usersUploadImage(req, res) {
+  const result = await uploadImage(req.file.path);
+  if (!result) return res.status(400).json({ error: 'Failure uploading image' });
+
+  const imgurl = await users.saveImageProfilePath(req.user.id, result);
+  if (!imgurl) return res.status(400).json({ error: 'Failure saving image' });
+  return res.status(200).json(imgurl);
+}
+
 function catchErrors(fn) {
   return (req, res, next) => fn(req, res, next).catch(next);
 }
@@ -194,10 +208,11 @@ router.post('/register', catchErrors(register));
 router.post('/login', catchErrors(loginRoute));
 router.get('/users', requireAuthentication, catchErrors(usersRoute));
 router.get('/users/me', requireAuthentication, catchErrors(userMeRoute));
-router.get('/users/:id', requireAuthentication, catchErrors(userRoute));
-router.get('/users/:id/read', requireAuthentication, catchErrors(userIdGetRead));
 router.patch('/users/me', requireAuthentication, catchErrors(userMePatchRoute));
 router.post('/users/me/read', requireAuthentication, catchErrors(userNewRead));
 router.get('/users/me/read', requireAuthentication, catchErrors(userGetRead));
+router.post('/users/me/profile', requireAuthentication, upload.single('profile'), catchErrors(usersUploadImage));
+router.get('/users/:id', requireAuthentication, catchErrors(userRoute));
+router.get('/users/:id/read', requireAuthentication, catchErrors(userIdGetRead));
 
 module.exports = router;

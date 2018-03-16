@@ -104,6 +104,18 @@ async function getUserRead(userId, limit, offset) {
   return result.rows;
 }
 
+async function saveImageProfilePath(userId, url) {
+  const q = 'UPDATE users SET imgurl = $1 WHERE id = $2 returning imgurl';
+  const vals = [url, userId];
+
+  const result = await query(q, vals);
+
+  if (result) {
+    if (result.rows.length === 1) return result.rows[0];
+  }
+  return null;
+}
+
 module.exports = {
   comparePasswords,
   findByUsername,
@@ -113,4 +125,5 @@ module.exports = {
   updateUser,
   addUserRead,
   getUserRead,
+  saveImageProfilePath,
 };
