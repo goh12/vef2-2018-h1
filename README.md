@@ -121,9 +121,9 @@ GET /books/:id
     Content-Type: application/json
     Authorization: bearer {user's token}
     {
-    	"bookId": "5",
-    	"userRating": 5,
-    	"userReview": "wow, very good book"
+    	"bookid": "5",
+    	"userrating": 5,
+    	"userreview": "wow, very good book"
     }
 ```
 
