@@ -4,6 +4,8 @@ const { Client } = require('pg');
 const connectionString = process.env.DATABASE_URL;
 
 async function query(q, values = []) {
+  console.log(q);
+  console.log(values);
   const client = new Client({ connectionString });
   await client.connect();
 
@@ -11,6 +13,7 @@ async function query(q, values = []) {
 
   try {
     result = await client.query(q, values);
+    console.log(result.rows);
   } catch (err) {
     throw err;
   } finally {
@@ -97,7 +100,6 @@ async function addUserRead(userId, bookId, userRating, userReview) {
 }
 
 async function getUserRead(userId, limit, offset) {
-  console.log(userId);
   const q = 'SELECT * FROM readbooks WHERE userId = $1 ORDER BY id ASC LIMIT $2 OFFSET $3';
 
   const result = await query(q, [userId, limit, offset]);
