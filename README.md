@@ -8,6 +8,9 @@
 * `npm run seedDB`
 
 
+### HEROKU APP: https://vefforritun2-ggf-h1-2018.herokuapp.com/
+### HEROKU GIT: https://git.heroku.com/vefforritun2-ggf-h1-2018.git
+
 * Upplýsingar um hvernig setja skuli upp verkefnið
 - Hvernig gagnagrunnur og töflur eru settar upp
 - Hvernig gögnum er komið inn í töflur
@@ -143,6 +146,14 @@ GET /books/:id
     Authorization: bearer {user's token}
     paginglimit: 10
     pagingoffset: 0
+```
+
+```
+  POST /users/me/profile
+  HEADER:
+    Authorization: bearer {user's token}
+  request_body: multipart/form-data
+    FILE | 'profile' | <imagepath>
 ```
 ---
 ## Höfundar
