@@ -97,6 +97,7 @@ async function addUserRead(userId, bookId, userRating, userReview) {
 }
 
 async function getUserRead(userId, limit, offset) {
+  console.log(userId);
   const q = 'SELECT * FROM readbooks WHERE userId = $1 ORDER BY id ASC LIMIT $2 OFFSET $3';
 
   const result = await query(q, [userId, limit, offset]);
