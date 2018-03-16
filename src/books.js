@@ -1,7 +1,7 @@
 const { Client } = require('pg');
 const validator = require('validator');
 
-const connectionString = process.env.DATABASE_H1;
+const connectionString = process.env.DATABASE_URL;
 
 /**
  *
