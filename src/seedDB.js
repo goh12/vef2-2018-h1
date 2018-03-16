@@ -8,7 +8,7 @@ const q = 'INSERT INTO books (title, ISBN13, author, description, category) VALU
 const categories = [];
 
 async function seedDB() {
-  const client = new Client({ connectionString: process.env.DATABASE_H1 });
+  const client = new Client({ connectionString: process.env.DATABASE_URL });
   await client.connect();
   fs.createReadStream(filePath)
     .pipe(csv())
