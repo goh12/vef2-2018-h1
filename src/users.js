@@ -3,6 +3,7 @@ const { Client } = require('pg');
 
 const connectionString = process.env.DATABASE_URL;
 
+
 async function query(q, values = []) {
   const client = new Client({ connectionString });
   await client.connect();
@@ -84,10 +85,16 @@ async function updateUser(id, name, password) {
 }
 
 async function addUserRead(userId, bookId, userRating, userReview) {
+  const errors = {};
+  if (!bookId) errors.bookid = 'Book id must be included';
+  if (!userRating || (userRating < 1 || userRating > 5)) errors.userrating = 'User rating must be 1 - 5';
+  if (errors.bookid || errors.userrating) return { errors };
+
   const q = `INSERT INTO readBooks (userId, bookId, userRating, userReview)
    VALUES ($1, $2, $3, $4) RETURNING *`;
 
   const result = await query(q, [userId, bookId, userRating, userReview]);
+  if (!result) return { error: 'Book id not found' };
 
   if (result.rowCount === 1) {
     return result.rows[0];
@@ -98,7 +105,6 @@ async function addUserRead(userId, bookId, userRating, userReview) {
 
 async function getUserRead(userId, limit, offset) {
   const q = 'SELECT * FROM readbooks WHERE userId = $1 ORDER BY id ASC LIMIT $2 OFFSET $3';
-
   const result = await query(q, [userId, limit, offset]);
 
   return result.rows;

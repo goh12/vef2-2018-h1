@@ -69,9 +69,10 @@ router.use(authenticate);
 // JWT_SECRET=$dk3Ae9dknv#Gposiuhvkjkljd
 async function loginRoute(req, res) {
   const { username, password } = req.body;
+  if (!username || username.length < 1) return res.status(400).json({ username: 'Username can not be the empty string' });
+  if (!password || password.length < 1) return res.status(400).json({ password: 'Password can not be the empty string' });
 
   const user = await users.findByUsername(username);
-
   if (!user) {
     return res.status(401).json({ error: 'No such user' });
   }
@@ -97,7 +98,7 @@ function requireAuthentication(req, res, next) {
 // hér væri hægt að bæta við enn frekari (og betri) staðfestingu á gögnum
 async function validateUser(username, password) {
   if (typeof username !== 'string' || username.length < 2) {
-    return 'Notendanafn verður að vera amk 2 stafir';
+    return 'username verður að vera amk 2 stafir';
   }
 
   const user = await users.findByUsername(username);
@@ -107,7 +108,7 @@ async function validateUser(username, password) {
   }
 
   if (typeof password !== 'string' || password.length < 6) {
-    return 'Lykilorð verður að vera amk 6 stafir';
+    return 'password verður að vera amk 6 stafir';
   }
 
   return null;
@@ -123,6 +124,7 @@ async function register(req, res) {
     return res.status(401).json({ validationMessage });
   }
 
+  if (!name) return res.status(400).json({ name: 'name must not be the empty string' });
   const result = await users.createUser(username, password, name);
 
   return res.status(200).json({ result });
@@ -164,7 +166,7 @@ async function userNewRead(req, res) {
   const { user } = req;
   const { bookid, userrating, userreview } = req.body;
   const result = await users.addUserRead(user.id, bookid, userrating, userreview);
-
+  if (result.errors) res.status(400).json(result);
   return res.status(200).json({ result });
 }
 
