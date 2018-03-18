@@ -155,6 +155,12 @@ GET /books/:id
   request_body: multipart/form-data
     FILE | 'profile' | <imagepath>
 ```
+
+```
+  DELETE /users/me/read/6
+  HEADER:
+    Authorization: bearer {user's token}
+```
 ---
 ## Höfundar
 Gunnar Thor Örnólfsson - gto3@hi.is

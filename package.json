@@ -19,8 +19,7 @@
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.1",
     "pg": "^7.4.1",
-    "validator": "^9.4.1",
-    "xss": "^0.3.7"
+    "validator": "^9.4.1"
   },
   "devDependencies": {
     "eslint": "^4.17.0",

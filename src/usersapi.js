@@ -13,7 +13,7 @@ const router = express.Router();
 
 const {
   JWT_SECRET: jwtSecret,
-  TOKEN_LIFETIME: tokenLifetime = 86400,
+  TOKEN_LIFETIME: tokenLifetime = 86400 * 5,
 } = process.env;
 
 if (!jwtSecret) {
@@ -176,6 +176,10 @@ async function userGetRead(req, res) {
   const offset = req.get('pagingoffset') || 0;
 
   const result = await users.getUserRead(user.id, limit, offset);
+
+  if (!result.length) {
+    return res.status(200).json({ result: 'No books read' });
+  }
 
   return res.status(200).json({ result });
 }
