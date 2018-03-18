@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const { Client } = require('pg');
+const xss = require('xss');
 
 const connectionString = process.env.DATABASE_URL;
 
@@ -122,6 +123,13 @@ async function saveImageProfilePath(userId, url) {
   return null;
 }
 
+async function userDeleteRead(id, userId) {
+  const q = 'DELETE FROM readBooks WHERE id = $1 AND userId = $2';
+  const result = await query(q, [id, userId]);
+
+  return result.rowCount;
+}
+
 module.exports = {
   comparePasswords,
   findByUsername,
@@ -132,4 +140,5 @@ module.exports = {
   addUserRead,
   getUserRead,
   saveImageProfilePath,
+  userDeleteRead,
 };

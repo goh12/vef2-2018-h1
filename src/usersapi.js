@@ -202,6 +202,19 @@ async function usersUploadImage(req, res) {
   return res.status(200).json(imgurl);
 }
 
+async function userDelete(req, res) {
+  const { id } = req.params;
+  const { user } = req;
+
+  const result = await users.userDeleteRead(id, user.id);
+
+  if (result) {
+    return res.status(200).json({ result: 'Book-reading successfully deleted' });
+  }
+
+  return res.status(400).json({ error: 'Failure deleting data' });
+}
+
 function catchErrors(fn) {
   return (req, res, next) => fn(req, res, next).catch(next);
 }
@@ -213,6 +226,7 @@ router.get('/users/me', requireAuthentication, catchErrors(userMeRoute));
 router.patch('/users/me', requireAuthentication, catchErrors(userMePatchRoute));
 router.post('/users/me/read', requireAuthentication, catchErrors(userNewRead));
 router.get('/users/me/read', requireAuthentication, catchErrors(userGetRead));
+router.delete('/users/me/read/:id', requireAuthentication, catchErrors(userDelete));
 router.post('/users/me/profile', requireAuthentication, upload.single('profile'), catchErrors(usersUploadImage));
 router.get('/users/:id', requireAuthentication, catchErrors(userRoute));
 router.get('/users/:id/read', requireAuthentication, catchErrors(userIdGetRead));
