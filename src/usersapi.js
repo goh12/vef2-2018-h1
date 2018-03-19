@@ -95,36 +95,51 @@ function requireAuthentication(req, res, next) {
   return next();
 }
 
-// hér væri hægt að bæta við enn frekari (og betri) staðfestingu á gögnum
-async function validateUser(username, password) {
+
+async function validateUser(username, password, name) {
+  const errors = [];
   if (typeof username !== 'string' || username.length < 2) {
-    return 'username verður að vera amk 2 stafir';
+    errors.push({
+      field: 'username',
+      message: 'username verður að vera amk 2 stafir',
+    });
   }
 
   const user = await users.findByUsername(username);
 
   if (user) {
-    return 'Notendanafn er þegar skráð';
+    errors.push({
+      field: 'username',
+      message: 'Username is required and must be at least three letters',
+    });
   }
 
   if (typeof password !== 'string' || password.length < 6) {
-    return 'password verður að vera amk 6 stafir';
+    errors.push({
+      field: 'password',
+      message: 'Password must be at least six letters',
+    });
   }
 
-  return null;
+  if (typeof name !== 'string' || name.length < 1) {
+    errors.push({
+      field: 'name',
+      message: 'Name is required and must not be empty',
+    });
+  }
+  return errors;
 }
 
 
 async function register(req, res) {
   const { username, password, name } = req.body;
 
-  const validationMessage = await validateUser(username, password);
+  const validationMessage = await validateUser(username, password, name);
 
   if (validationMessage) {
     return res.status(401).json({ validationMessage });
   }
 
-  if (!name) return res.status(400).json({ name: 'name must not be the empty string' });
   const result = await users.createUser(username, password, name);
 
   return res.status(200).json({ result });
