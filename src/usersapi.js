@@ -98,10 +98,10 @@ function requireAuthentication(req, res, next) {
 
 async function validateUser(username, password, name) {
   const errors = [];
-  if (typeof username !== 'string' || username.length < 2) {
+  if (typeof username !== 'string' || username.length < 3) {
     errors.push({
       field: 'username',
-      message: 'username verður að vera amk 2 stafir',
+      message: 'Username is required and must be at least three letters',
     });
   }
 
@@ -110,7 +110,7 @@ async function validateUser(username, password, name) {
   if (user) {
     errors.push({
       field: 'username',
-      message: 'Username is required and must be at least three letters',
+      message: 'Username is already registered',
     });
   }
 
@@ -152,7 +152,7 @@ async function usersRoute(req, res) {
 
   const result = await users.getUsers(limit, offset);
 
-  return res.status(200).json({ result });
+  return res.status(200).json({ limit, offset, result });
 }
 
 async function userRoute(req, res) {
@@ -162,7 +162,7 @@ async function userRoute(req, res) {
   if (!result) {
     return res.status(404).json({ error: 'No user found by that id' });
   }
-  return res.status(200).json({ result });
+  return res.status(200).json({ user: result });
 }
 
 async function userMeRoute(req, res) {
@@ -173,6 +173,25 @@ async function userMeRoute(req, res) {
 async function userMePatchRoute(req, res) {
   const { user } = req;
   const { name, password } = req.body;
+  const errors = [];
+
+  if (typeof password !== 'string' || password.length < 6) {
+    errors.push({
+      field: 'password',
+      message: 'Password must be at least six letters',
+    });
+  }
+
+  if (typeof name !== 'string' || name.length < 1) {
+    errors.push({
+      field: 'name',
+      message: 'Name is required and must not be empty',
+    });
+  }
+
+  if (errors.length) {
+    return res.status(401).json({ errors });
+  }
   const result = await users.updateUser(user.id, name, password);
 
   return res.status(200).json({ result });
@@ -197,7 +216,7 @@ async function userGetRead(req, res) {
     return res.status(200).json({ result: 'No books read' });
   }
 
-  return res.status(200).json({ result });
+  return res.status(200).json({ limit, offset, result });
 }
 
 async function userIdGetRead(req, res) {
@@ -210,7 +229,7 @@ async function userIdGetRead(req, res) {
   if (!result) {
     return res.status(404).json({ error: 'No user found by that id' });
   }
-  return res.status(200).json({ result });
+  return res.status(200).json({ limit, offset, result });
 }
 
 async function usersUploadImage(req, res) {
