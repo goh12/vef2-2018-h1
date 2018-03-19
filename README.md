@@ -1,23 +1,19 @@
-# Vefforritun 2 - Hópverkefni 1
+﻿# Vefforritun 2 - Hópverkefni 1
 ---
 ## Uppsetning og notkun
 
 * `git clone https://github.com/goh12/vef2-2018-h1.git`
 * `npm install`
-* Búa til gagnagrunn með gefnu schema
-* `npm run seedDB`
+* Búa til gagnagrunn með schema sem gefið er í verkefni.
+* `npm run seedDB` (notar process.env.DATABASE_URL)
+* npm start
 
 
 ### HEROKU APP: https://vefforritun2-ggf-h1-2018.herokuapp.com/
 ### HEROKU GIT: https://git.heroku.com/vefforritun2-ggf-h1-2018.git
 
-* Upplýsingar um hvernig setja skuli upp verkefnið
-- Hvernig gagnagrunnur og töflur eru settar upp
-- Hvernig gögnum er komið inn í töflur
-
 ---
 ## Dæmi um köll í vefþjónustu
-### Þarf líklegast að setja CURL köll hérna en ekki það sem er núna.
 ```
 GET /books
 HEADER:
