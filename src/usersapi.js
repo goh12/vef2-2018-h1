@@ -127,6 +127,7 @@ async function validateUser(username, password, name) {
       message: 'Name is required and must not be empty',
     });
   }
+
   return errors;
 }
 
@@ -136,8 +137,8 @@ async function register(req, res) {
 
   const validationMessage = await validateUser(username, password, name);
 
-  if (validationMessage) {
-    return res.status(401).json({ validationMessage });
+  if (validationMessage.length > 0) {
+    return res.status(401).json({ errors: validationMessage });
   }
 
   const result = await users.createUser(username, password, name);
