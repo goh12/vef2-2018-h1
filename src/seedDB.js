@@ -23,7 +23,7 @@ async function seedDB() {
           [data.title, data.isbn13, data.author, data.description, data.category],
         );
       } catch (err) {
-        console.log(err);
+        console.log(err); /* eslint-disable-line */
       }
     })
     .on('end', () => true);
@@ -32,11 +32,11 @@ async function seedDB() {
 
 async function run() {
   try {
-    console.log('Begins..');
+    console.log('Begins..'); /* eslint-disable-line */
     await seedDB();
-    console.log('End.');
+    console.log('End.'); /* eslint-disable-line */
   } catch (err) {
-    console.log(err);
+    console.log(err); /* eslint-disable-line */
   }
 }
 
